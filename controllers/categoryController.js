@@ -30,3 +30,66 @@ export function createCategory(req, res) {
     }   
 
 
+
+    export function deleteCategory(req, res) {
+        if (req.user == null) {
+            res.status(403).json({
+                message: "Please login to delete a category (unauthorized).",
+            });
+            return;
+        }
+        if (req.user.type !== "admin") {
+            res.status(403).json({
+                message: "Only admin can delete a category (forbidden).",
+            });
+            return;
+        }
+    
+        const name = req.params.name;
+    
+        console.log("Attempting to delete category:", name);
+    
+        Category.findOneAndDelete({ name: name })
+            .then((result) => {
+                if (!result) {
+                    res.status(404).json({
+                        message: "Category not found.",
+                    });
+                    return;
+                }
+    
+                res.json({
+                    message: "Category deleted successfully.",
+                    result: result,
+                });
+            })
+            .catch((error) => {
+                console.error("Error deleting category:", error);
+                res.status(500).json({
+                    message: "Category not deleted due to an error.",
+                    error: error.message,
+                });
+            });
+    }
+    
+    export function getCategories(req, res) {    
+        Category.find().then(
+            (result) => {
+
+                res.json({
+                    categories : result
+                })
+            }
+        ).catch(
+            (error)=>{
+                res.json(
+                    {
+                        message : "failed to get categories",
+                        error : error
+                    }
+        )
+                });
+            }
+                     
+    
+   

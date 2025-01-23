@@ -90,6 +90,35 @@ export function createCategory(req, res) {
         )
                 });
             }
-                     
+             
+            
+            export function getCategory(req, res) {
+                const name = req.params.name;
+                Category.findOne({ name: name })
+                    .then(
+                        (result) => {
+
+                        if (result==null) {
+                            res.json({
+                                message: "Category not found.",
+                            });
+                            return;
+                        }
+                        else{
+                            res.json({
+                                category : result
+                            })
+                        }
     
+                        })
+                    .catch(
+                        () => {
+                            res.json({
+                                message: "failed to get category.",
+                            });
+                        }
+                    )}
+
+                    
+
    

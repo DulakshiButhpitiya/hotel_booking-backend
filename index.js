@@ -4,6 +4,7 @@ import mongoose, { mongo } from "mongoose";
 import userRouter from "./routes/userRoute.js";
 import galleryItemRouter from "./routes/galleryItemRoute.js";
 import categoryRouter from "./routes/categoryRoutes.js";
+import roomRouter from "./routes/roomRoute.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 //sensitive data save in .env 
@@ -55,6 +56,7 @@ mongoose.connect(connectionString).then(() => {
 app.use("/api/users", userRouter)
 app.use("/api/gallery", galleryItemRouter)
 app.use("/api/category", categoryRouter)
+app.use("/api/rooms", roomRouter)
 
 
 //server connection

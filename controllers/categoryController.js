@@ -1,4 +1,5 @@
 import Category from "../model/category.js";
+import { isAdminValid } from "./userController.js";
 
 export function createCategory(req, res) {
     if(req.user ==null){
@@ -72,10 +73,9 @@ export function createCategory(req, res) {
             });
     }
     
-    export function getCategories(req, res) {    
+    export function getCategory(req, res) {    
         Category.find().then(
             (result) => {
-
                 res.json({
                     categories : result
                 })
@@ -92,7 +92,7 @@ export function createCategory(req, res) {
             }
              
             
-            export function getCategory(req, res) {
+            export function getCategoryByName(req, res) {
                 const name = req.params.name;
                 Category.findOne({ name: name })
                     .then(
@@ -102,7 +102,7 @@ export function createCategory(req, res) {
                             res.json({
                                 message: "Category not found.",
                             });
-                            return;
+                            
                         }
                         else{
                             res.json({
@@ -119,6 +119,28 @@ export function createCategory(req, res) {
                         }
                     )}
 
-                    
-
-   
+            export function updateCategory(req, res) {
+                if(!isAdminValid(req)){
+                    res.status(403).json({
+                        message: "Please login to update a category (unauthorized).",
+                    });
+                    return;
+                }
+                const name = req.params.name;
+               Category.updateOne({name : name},req.body).then(
+                ()=>{
+                    res.json({
+                        message: "category updated successfully"
+                    })
+                }
+               ).catch(
+                (error)=>{
+                    res.json({
+                        message: "failed to update category",
+                        error : error
+                    })
+                }
+                   
+               )
+            }
+            

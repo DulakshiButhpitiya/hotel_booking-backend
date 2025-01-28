@@ -96,3 +96,15 @@ export function isAdminValid(req){
     }
     return true;
 }
+
+// check user is logged customer
+export function isCustomerValid(req){
+    if(req.user ==null){
+        return false;
+    }
+    console.log(req.user);
+    if(req.user.type != "customer"){
+        return false;
+    }
+    return true;
+}

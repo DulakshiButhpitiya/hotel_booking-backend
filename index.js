@@ -8,6 +8,7 @@ import roomRouter from "./routes/roomRoute.js";
 import bookingRouter from "./routes/bookingRoutes.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import cors from "cors";
 //sensitive data save in .env 
 dotenv.config();
 

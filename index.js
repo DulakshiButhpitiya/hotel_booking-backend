@@ -9,6 +9,7 @@ import bookingRouter from "./routes/bookingRoutes.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import cors from "cors";
+
 //sensitive data save in .env 
 dotenv.config();
 
@@ -29,15 +30,16 @@ const connectionString = process.env.MONGO_URL;
 app.use((req,res,next)=>{
 
 const token =req.header("Authorization")?.replace ("Bearer ","")
-
+console.log('****+token+******',token);
 if(token !=null){
     jwt.verify(token,process.env.JWT_KEY,
         (err,decoded)=>{
             if(decoded != null){
-                req.user=decoded
+                req.body.user=decoded
                 next()
 
             }else{
+                
                 next()
             }
             }

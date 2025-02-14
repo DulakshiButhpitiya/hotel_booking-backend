@@ -35,7 +35,7 @@ if(token !=null){
     jwt.verify(token,process.env.JWT_KEY,
         (err,decoded)=>{
             if(decoded != null){
-                req.body.user=decoded
+                req.user=decoded
                 next()
 
             }else{

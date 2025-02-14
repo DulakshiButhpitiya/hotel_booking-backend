@@ -6,13 +6,14 @@ const categoryRouter = express.Router();
 
 categoryRouter.post("/",createCategory);
 categoryRouter.delete("/:name",deleteCategory);
-categoryRouter.get("/searchByPrice",(req,res)=>
-    res.json({
-        message : "search by price"
-    })
-)
+// categoryRouter.get("/searchByPrice",(req,res)=>
+//     res.json({
+//         message : "search by price"
+//     })
+// )
 
 categoryRouter.get("/:name",getCategoryByName);
+
 categoryRouter.get("/",getCategory);
 categoryRouter.put("/:name",updateCategory);
 

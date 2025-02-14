@@ -10,7 +10,8 @@ export function createCategory(req, res) {
     }
     if (req.user.type != "admin") {
         res.status(403).json({
-            message: "only admin can create a category(feridden)"})
+            message: "only admin can create a category(feridden)"
+        })
             return
         }
         const newCategory = new Category(req.body);
@@ -30,38 +31,81 @@ export function createCategory(req, res) {
         })
     }   
 
-
+    // export async function deleteCategory(req, res) {
+    //     // Log the user object for debugging
+    //     console.log("User attempting to delete category:", req.user);
+    
+    //     // Check if the user is authenticated
+    //     if (!req.user) {
+    //         return res.status(403).json({
+    //             message: "Please login to delete a category (unauthorized).",
+    //         });
+    //     }
+    
+    //     // Check if the user is an admin
+    //     if (req.user.type !== "admin") {
+    //         return res.status(403).json({
+    //             message: "Only admin can delete a category (forbidden).",
+    //         });
+    //     }
+    
+    //     // Extract the category name from the request parameters
+    //     const { name } = req.params;
+    
+    //     // Log the category name for debugging
+    //     console.log("Attempting to delete category:", name);
+    
+    //     try {
+    //         // Attempt to delete the category
+    //         const deletedCategory = await Category.findOneAndDelete({ name });
+    
+    //         // Check if the category was found and deleted
+    //         if (!deletedCategory) {
+    //             return res.status(404).json({
+    //                 message: "Category not found.",
+    //             });
+    //         }
+    
+    //         // Send success response
+    //         return res.json({
+    //             message: "Category deleted successfully.",
+    //         });
+    //     } catch (error) {
+    //         // Log the error for debugging
+    //         console.error("Error deleting category:", error);
+    
+    //         // Send error response
+    //         return res.status(500).json({
+    //             message: "Category not deleted due to an error.",
+    //             error: error.message,
+    //         });
+    //     }
+    // }
 
     export function deleteCategory(req, res) {
-        if (req.user == null) {
+        console.log(req.user);
+        if (!req.user) {
             res.status(403).json({
                 message: "Please login to delete a category (unauthorized).",
             });
-            return;
+            
         }
-        if (req.user.type !== "admin") {
+        if (req.user.type != "admin") {
             res.status(403).json({
                 message: "Only admin can delete a category (forbidden).",
             });
-            return;
+            
         }
     
         const name = req.params.name;
     
-        console.log("Attempting to delete category:", name);
+        // console.log("Attempting to delete category:", name);
     
-        Category.findOneAndDelete({ name: name })
-            .then((result) => {
-                if (!result) {
-                    res.status(404).json({
-                        message: "Category not found.",
-                    });
-                    return;
-                }
-    
+        Category.findOneAndDelete({name:name})
+            .then(() => {
                 res.json({
                     message: "Category deleted successfully.",
-                    result: result,
+             
                 });
             })
             .catch((error) => {

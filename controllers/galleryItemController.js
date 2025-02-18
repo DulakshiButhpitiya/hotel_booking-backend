@@ -18,7 +18,7 @@ export function postgalleryItem(req, res) {
         return
     }
     //end token
-    const galleryItem =req.body.item
+   const galleryItem =req.body
 
     const newgalleryItem =new GalleryItem(galleryItem)
 

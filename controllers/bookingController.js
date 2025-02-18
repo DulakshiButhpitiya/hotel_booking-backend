@@ -50,3 +50,55 @@ export function createBooking(req, res) {
     }
     );
 }
+
+export  function getAllBookings(res,req) {
+    Booking.find().then(
+        (result) => {
+            res.json({
+                message: "All bookings",
+                result: result,
+            });
+        }
+    ).catch(
+        (error) => {
+            res.json({
+                message: "No bookings found",
+                error: error,
+            });
+        }   
+    );
+}
+
+export function retrieveBookingByDate(req, res) {
+    const start = req.body.start;
+    const end = req.body.end;
+
+    console.log(start);
+    console.log(end);
+
+    
+
+    Booking.find({ start: { 
+        // greater-than  $gte=greater than or equal to   $lt=less than
+        $gt: start, 
+
+        $lt: new Date(end) } 
+    })
+        .then(
+        (result) => {
+        res.json({
+            message: "Filtered bookings",
+            result: result,  })
+         } ).catch(
+            (error) => {
+                res.json({
+                    message: "failed to get filtered bookings",
+                    error: error,
+                });
+            }
+        );
+        }
+    
+
+    
+    

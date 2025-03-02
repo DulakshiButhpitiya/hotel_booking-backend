@@ -1,10 +1,10 @@
 import express from "express";
 import { createCategory,deleteCategory, getCategoryByName, getCategory,updateCategory} from "../controllers/categoryController.js";
-
+import upload from "../utils/multer.js";
 const categoryRouter = express.Router();
 
 
-categoryRouter.post("/",createCategory);
+categoryRouter.post("/",upload.single("img"),createCategory);
 categoryRouter.delete("/:name",deleteCategory);
 // categoryRouter.get("/searchByPrice",(req,res)=>
 //     res.json({

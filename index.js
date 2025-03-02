@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import userRouter from "./routes/userRoute.js";
 import galleryItemRouter from "./routes/galleryItemRoute.js";
 import categoryRouter from "./routes/categoryRoutes.js";
@@ -9,64 +9,48 @@ import bookingRouter from "./routes/bookingRoutes.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
-//sensitive data save in .env 
 dotenv.config();
-
 const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
-app.use(cors())
+// Convert import.meta.url to __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-//middleware
-app.use(bodyParser.json())
+// Serve static files from "uploads" directory
+app.use("/api/gallery/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Database connection
+mongoose.connect(process.env.MONGO_URL)
+    .then(() => console.log("Connected to database"))
+    .catch(() => console.log("Failed to connect to database"));
 
-//databse connection
-const connectionString = process.env.MONGO_URL;
-
-
-
-//set jwt token
-app.use((req,res,next)=>{
-
-const token =req.header("Authorization")?.replace ("Bearer ","")
-console.log('****+token+******',token);
-if(token !=null){
-    jwt.verify(token,process.env.JWT_KEY,
-        (err,decoded)=>{
-            if(decoded != null){
-                req.user=decoded
-                next()
-
-            }else{
-                
-                next()
-            }
-            }
-        )
+// JWT Middleware
+app.use((req, res, next) => {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    console.log('**** Token ****', token);
+    if (token) {
+        jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+            if (decoded) req.user = decoded;
+            next();
+        });
+    } else {
+        next();
     }
-            else{
-                next()
-            }
+});
 
-    
-        })
+// Routers
+app.use("/api/users", userRouter);
+app.use("/api/gallery", galleryItemRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/rooms", roomRouter);
+app.use("/api/booking", bookingRouter);
 
-mongoose.connect(connectionString).then(() => {
-    console.log("Connected to database")
-}).catch(() => {
-    console.log("Failed to connect to database")
-})
-
-//routers
-app.use("/api/users", userRouter)
-app.use("/api/gallery", galleryItemRouter)
-app.use("/api/category", categoryRouter)
-app.use("/api/rooms", roomRouter)
-app.use("/api/booking", bookingRouter)
-
-
-//server connection
+// Start Server
 app.listen(5000, () => {
-    console.log("Server started on port 5000")
-})
+    console.log("Server started on port 5000");
+});

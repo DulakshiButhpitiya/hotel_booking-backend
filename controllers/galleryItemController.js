@@ -1,39 +1,76 @@
-import GalleryItem from "../model/galleryItem.js"
+
+
+import GalleryItem from "../model/galleryItem.js"; // Ensure model is imported
+
 export function postgalleryItem(req, res) {
-    const user =req.user
-    //token set
-    if(user == null){
+    const user = req.user;
 
-        res.status(403).json({
-            message: "please login to create a galleryItem"
-        })
-        return
+    // Token check
+    if (!user) {
+        return res.status(403).json({
+            message: "Please login to create a gallery item",
+        });
     }
-    //check admin role
-    if(user.type != "admin"){
-        res.status(403).json({
-            message: "only admin can create a galleryItem"
-            
-        })
-        return
+
+    // Admin role check
+    if (user.type !== "admin") {
+        return res.status(403).json({
+            message: "Only admins can create a gallery item",
+        });
     }
-    //end token
-   const galleryItem =req.body
 
-    const newgalleryItem =new GalleryItem(galleryItem)
+    // Check if image file is uploaded
+    if (!req.file) {
+        return res.status(400).json({
+            message: "Image not uploaded",
+        });
+    }
 
-    newgalleryItem.save().then(
-        ()=> {
+    const { name, description } = req.body;
+
+    // Create a new gallery item properly using Mongoose model
+    const newGalleryItem = new GalleryItem({
+        name,
+        description,
+        img: req.file.filename, // Save filename
+    });
+
+    // Save the new gallery item to the database
+    newGalleryItem
+        .save()
+        .then((result) => {
             res.json({
-             message: "galleryItem created successfully" })
-        }
-    ).catch(
-        ()=>{
+                message: "Gallery item created successfully",
+                result: result,
+            });
+        })
+        .catch((error) => {
+            console.error(error);
             res.status(500).json({
-                message: "galleryItem not created" })
-        }
-    )
+                message: "Gallery item not created",
+                error: error.message,
+            });
+        });
 }
+
+
+
+//    const galleryItem =req.body
+
+//     const newgalleryItem =new GalleryItem(galleryItem)
+
+//     newgalleryItem.save().then(
+//         ()=> {
+//             res.json({
+//              message: "galleryItem created successfully" })
+//         }
+//     ).catch(
+//         ()=>{
+//             res.status(500).json({
+//                 message: "galleryItem not created" })
+//         }
+//     )
+
 
 export function getgalleryItem(req, res) {
     GalleryItem.find().then(

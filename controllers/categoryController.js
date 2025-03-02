@@ -14,7 +14,26 @@ export function createCategory(req, res) {
         })
             return
         }
-        const newCategory = new Category(req.body);
+
+            // Check if image file is uploaded
+    if (!req.file) {
+        return res.status(400).json({
+            message: "Image not uploaded",
+        });
+    }
+
+    const { name, description,
+        price,
+        features} = req.body;
+
+        const newCategory = new Category({
+            name,
+            description,
+            price,
+            features,
+            img: req.file.filename, // Save filename
+        });
+
         newCategory.save().then(
             (result)=>{
 

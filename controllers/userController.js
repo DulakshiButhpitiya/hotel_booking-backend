@@ -125,3 +125,93 @@ export function getUser(req, res){
 
     } 
 }
+
+export function getAllUsers(req, res) {
+    // Validate admin
+    if (!isAdminValid(req)) {
+      res.status(403).json({
+        message: "Forbidden",
+      });
+      return;
+    }
+  
+    // Extract page and pageSize from query parameters
+    const page = parseInt(req.body.page) || 1; // Default to page 1
+    const pageSize = parseInt(req.body.pageSize) || 10; // Default to 10 items per page
+    const skip = (page - 1) * pageSize;
+  
+    User.find()
+      .skip(skip)
+      .limit(pageSize)
+      .then((users) => {
+        User.countDocuments().then((totalCount) => {
+          res.json({
+            message: "Users found",
+            users: users,
+            pagination: {
+              currentPage: page,
+              pageSize: pageSize,
+              totalUsers: totalCount,
+              totalPages: Math.ceil(totalCount / pageSize),
+            },
+          });
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: "Error fetching users",
+          error: err,
+        });
+      });
+  }
+
+  export function delelteUserByEmail(req, res) {
+    //validate admin
+    if (!isAdminValid(req)) {
+      res.status(403).json({
+        message: "Forbidden",
+      });
+      return;
+    }
+    const email = req.params.email;
+  
+    User.findOneAndDelete({ email: email })
+      .then(() => {
+        res.json({
+          message: "User deleted",
+        });
+      })
+      .catch((err) => {
+        res.json({
+          message: "User delete failed",
+          error: err,
+        });
+      });
+  }
+
+  export function disableUser(req, res) {
+    //validate admin
+    if (!isAdminValid(req)) {
+      res.status(403).json({
+        message: "Forbidden",
+      });
+      return;
+    }
+    const userId = req.params.userId;
+    const disabled = req.body.disabled;
+  
+    User.findOneAndUpdate({ _id: userId }, { disabled: disabled })
+      .then(() => {
+        res.json({
+          message: "User disabled/enabled",
+        });
+      })
+      .catch((err) => {
+        res.json({
+          message: "User disable/enable failed",
+          error: err,
+        });
+      });
+  }
+
+  

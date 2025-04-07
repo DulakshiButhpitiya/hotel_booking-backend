@@ -29,7 +29,7 @@ export function createRoom(req, res) {
     }
 
     //delete room
-    export function deleteRoom(req,res) {
+    export function deleteRoom(req,res) { 
         if(!isAdminValid(req)){
             res.status(403).json({
                 message: "forbidden access",

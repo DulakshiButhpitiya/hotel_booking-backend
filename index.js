@@ -6,6 +6,7 @@ import galleryItemRouter from "./routes/galleryItemRoute.js";
 import categoryRouter from "./routes/categoryRoutes.js";
 import roomRouter from "./routes/roomRoute.js";
 import bookingRouter from "./routes/bookingRoutes.js";
+import contactUsRouter from "./routes/contactUs.js"; // Import the contactUs router
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -49,6 +50,7 @@ app.use("/api/gallery", galleryItemRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/rooms", roomRouter);
 app.use("/api/booking", bookingRouter);
+app.use('/api/contact', contactUsRouter); // Add this line to include the contactUs router
 
 // Start Server
 app.listen(5000, () => {

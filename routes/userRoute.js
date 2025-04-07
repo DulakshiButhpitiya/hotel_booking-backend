@@ -16,6 +16,6 @@ userRouter.put("/disable/:userId",disableUser)
 
 userRouter.delete("/admin-delete/:email",delelteUserByEmail)
 
-
+ 
 
 export default userRouter;

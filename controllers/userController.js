@@ -103,14 +103,14 @@ export function isCustomerValid(req){
         return false;
     }
     console.log(req.user);
-    if(req.user.type != "customer"){
+    if(req.user.type != "user"){
         return false;
     }
     return true;
 }
 
 export function getUser(req, res){ 
-    const user = req.body.user;
+    const user = req.user;
 
     if(user==null){
         res.status(403).json({

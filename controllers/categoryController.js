@@ -7,10 +7,11 @@ export function createCategory(req, res) {
             message: "please login to create a category(unautherised)"
         })
         return
+        
     }
     if (req.user.type != "admin") {
         res.status(403).json({
-            message: "only admin can create a category(feridden)"
+            message: "only admin can create a category(ferbidden)"
         })
             return
         }
